@@ -1,11 +1,13 @@
 
 function fnil(){}
 
-function show(x){
+function show(x,n){
+    n= n||3;
+    if(n<=0) return "";
     var ret=x+"{";
     for(i in x){
 	ret+= i+"=";
-	ret+= show(x[i])+", ";
+	ret+= show(x[i],n-1)+", ";
     }
     ret+="}";
 
@@ -23,7 +25,8 @@ function escapeHtml(text) {
 function escapeString(str) {  
     return '"' + str.replace(/(\\|\"|\n|\r|\t)/g, "\\$1") + '"';  
 }  
-Object.prototype.serialize= function(){
+//Object.prototype.
+serialize= function(){
     var type = __typeof__(this);
     switch(type){
     case 'Array' :{

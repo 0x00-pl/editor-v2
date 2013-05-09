@@ -19,6 +19,9 @@ color:red;
 
 <script src="basef.js" type="text/javascript"></script>
 <script src="file_system.js" type="text/javascript"></script>
+<script src="event.js" type="text/javascript"></script>
+<script src="buffers.js" type="text/javascript"></script>
+<script src="render_to_html.js" type="text/javascript"></script>
 <script>
 function run_click(){
  var t= document.getElementById("code_input").value;
@@ -26,7 +29,8 @@ function run_click(){
  document.getElementById("layout").innerHTML= r;
 }
 function render_click(){
- var v= file_system.render_to_html(root.get("data").get("buffers"));
+ //var v= file_system.render_to_html(root.get("data").get("buffers"));
+ var v= event.trigger("render_to_html",root.get("data").get("buffers"));
  document.getElementById("layout").innerHTML= v;
 }
 render_click();

@@ -23,6 +23,9 @@ var file_system={
 	    }
 	    return null;
 	};
+	this.ref=function(name){
+	    return items[name];
+	};
 	this.push=function(name,nw){
 	    var val= nw.patch(items[name]);
 	    items[name]= val;
@@ -51,47 +54,13 @@ var file_system={
 	    }
 	});
     },
-    render_to_html:function(fi){
-	//use './.render_to_html' as function to render '.' or render as string
-	if(fi.is_dir()){
-	    var render_bloc= fi.get('.render_to_html');
-	    if(render_bloc){
-		return render_bloc.data(fi);
-	    }else{
-		return mr("",fi.ls(),mr_concat,function(v,k){
-		    return file_system.render_to_html(fi.get(v));
-		});
-	    }
-	}else{
-	    return escapeHtml(fi.data.toString());
-	}
-    },
     boot_root:function(){
 	var ret= new file_system.file_dir();
 	return ret;
     },
-    red_hello_buffer:function(){
-	var tr= new file_system.file_dir();
-	var text= new file_system.file_bloc('hello world!');
-	tr.push('text',text);
-	var render_to_html=new file_system.file_bloc(function(_tr){
-	    var txt=_tr.get('text').data;
-	    return "<a class='red'>"+escapeHtml(txt)+"</a>";
-	});
-	tr.push('.render_to_html',render_to_html);
-	return tr;
-    },
-    start_buffer:function(){
-	var bufs= new file_system.file_dir();
-	//var hello_buf= new file_system.file_bloc('hello world!');
-	var hello_buf= file_system.red_hello_buffer();
-	bufs.push('hello',hello_buf);
-	return bufs;
-    },
     start_up:function(){
 	var rt= file_system.boot_root();
 	var data= new file_system.file_dir();
-	data.push('buffers', file_system.start_buffer());
 	rt.push('data', data);
 	return rt;
     },

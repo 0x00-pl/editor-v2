@@ -9,7 +9,7 @@ color:red;
 }
 </style>
 </head>
-<body>
+<body id="global">
 
 <p id="layout">text_aera</p>
 
@@ -33,6 +33,10 @@ function render_click(){
  var v= event.trigger("render_to_html",root.get("data").get("buffers"));
  document.getElementById("layout").innerHTML= v;
 }
+document.getElementById("global").onkeydown=function(key_event){
+ event.trigger("user_keydown",root.ref("data").ref("buffers"),key_event);
+ render_click();
+};
 render_click();
 </script>
 

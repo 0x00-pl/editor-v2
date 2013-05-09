@@ -2,12 +2,13 @@
 function fnil(){}
 
 function show(x,n){
-    n= n||3;
-    if(n<=0) return "";
+    n= n||4;
+    if(n<=1) return "";
     var ret=x+"{";
     for(i in x){
 	ret+= i+"=";
-	ret+= show(x[i],n-1)+", ";
+	//ret+= show(x[i],n-1)+", ";
+	ret+= x[i]+", ";
     }
     ret+="}";
 
@@ -96,4 +97,11 @@ function mr(dst,src,freduce,fmap){
 	dst= freduce(dst, fmap(src[key],key));
     }
     return dst;
+}
+
+function max(x,y){
+    return x>=y?x:y;
+}
+function min(x,y){
+    return x<=y?x:y;
 }

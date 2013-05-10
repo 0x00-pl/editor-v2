@@ -12,7 +12,7 @@ color:red;
 <body id="global">
 
 <p id="layout">text_aera</p>
-
+<input id="mian_input" onchange="var txt=this.value; user_input(txt); this.value='';"></input><br/>
 <textarea id="code_input" width="100%" height="400px" wrap="logical"></textarea>
 <button onclick="run_click()">Go</button>
 <button onclick="render_click()">Force-Render</button>
@@ -37,6 +37,10 @@ document.getElementById("global").onkeydown=function(key_event){
  event.trigger("user_keydown",root.ref("data").ref("buffers"),key_event);
  render_click();
 };
+function user_input(txt){
+ event.trigger("user_input",root.ref("data").ref("buffers"),txt);
+ render_click();
+}
 render_click();
 </script>
 

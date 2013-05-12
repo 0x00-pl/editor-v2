@@ -42,6 +42,13 @@ var file_system={
 	};
 	this.is_dir=function(){return false;};
     },
+    ref_path:function(fpath){
+	var pf= root;
+	for(var i=0; i<fpath.length; i=i+1){
+	    pf= pf.ref(fpath[i]);
+	}
+	return pf;
+    },
     find:function(tree_root,reg){
 	reg=reg||/.*/;
 	return mr([],tree_root.ls(), function(collect,name){

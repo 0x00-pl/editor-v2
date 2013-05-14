@@ -34,23 +34,39 @@ var buffers={
     },
     text_buffer:function(){
 	var cursor= function(buf_dir){
+	    this.state_insert=false;
 	    this.pos=0;
-	    this.move_left=function(){this.pos=max(this.pos-1,0);};
-	    this.move_right=function(){this.pos=min(this.pos+1,buf_dir.ref('text').data.length);};
-	    this.insert=function(txt){
-		var old= buf_dir.ref('text').data;
-		buf_dir.ref('text').data= old.substring(0,this.pos)+ txt+ old.substring(this.pos,old.length);
-		this.pos= this.pos+txt.length;
-	    };
+	    this.move_left=function(){if(this.state_insert)return; this.pos=max(this.pos-1,0);};
+	    this.move_right=function(){if(this.state_insert)return; this.pos=min(this.pos+1,buf_dir.ref('text').data.length);};
 	    this.backspace=function(){
+		if(this.state_insert)return;
 		if(this.pos<=0)return;
 		var old= buf_dir.ref('text').data;
 		buf_dir.ref('text').data= old.substring(0,this.pos-1)+ old.substring(this.pos,old.length);
 		this.pos= this.pos-1;
 	    };
+	    this.begin_insert=function(){
+		if(this.state_insert)return;
+		this.state_insert=true;
+		document.getElementById("main_input").hidden=false;
+		document.getElementById("main_input").focus();
+		document.getElementById("main_input").value=' ';
+	    };
+	    this.end_insert=function(){
+		if(this.state_insert==false)return;
+		this.state_insert=false;
+		document.getElementById("main_input").hidden=true;
+	    };
+	    this.insert=function(txt){
+		if(this.state_insert==false)return;
+		var old= buf_dir.ref('text').data;
+		buf_dir.ref('text').data= old.substring(0,this.pos)+ txt+ old.substring(this.pos,old.length);
+		this.pos= this.pos+txt.length;
+		this.end_insert();
+	    };
 	};
 	var tr= new file_system.file_dir();
-	tr.push('text',new file_system.file_bloc('text--hello world!'));
+	tr.push('text',new file_system.file_bloc("text--hello world! [press 'space' to insert]"));
 	tr.push('cursor',new file_system.file_bloc(new cursor(tr)));
 	tr.push('.render_to_html',new file_system.file_bloc(function(){
 	    var txt= tr.ref('text').data;
@@ -62,12 +78,15 @@ var buffers={
 	    //alert(show(tr.ref('cursor').data));
 	    if(key==key_event.DOM_VK_LEFT || key==37){
 		tr.ref('cursor').data.move_left();
-	    }
+	    }else
 	    if(key==key_event.DOM_VK_RIGHT || key==39){
 		tr.ref('cursor').data.move_right();
-	    }
+	    }else
 	    if(key==key_event.DOM_VK_BACK_SPACE || key==8){
 		tr.ref('cursor').data.backspace();
+	    }else
+	    if(key==key_event.DOM_VK_SPACE || key==32){
+		tr.ref('cursor').data.begin_insert();
 	    }
 	}));
 	tr.push('.user_input',new file_system.file_bloc(function(sender,txt){
